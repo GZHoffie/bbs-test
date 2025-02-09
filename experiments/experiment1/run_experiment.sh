@@ -8,9 +8,9 @@ centers_list=("../datasets/our_nanopore_refs_subsampled.txt"
               "../datasets/oligo0refs.txt" 
               "../datasets/Centers_removed_empty_cluster.txt")
 read_lengths=(110 108 110)
-output_directory=("../results/in_house" 
-                  "../results/chandak" 
-                  "../results/microsoft_CNR")
+output_directory=("../results/experiment1/in_house" 
+                  "../results/experiment1/chandak" 
+                  "../results/experiment1/microsoft_CNR")
 separator=("===" "CLUSTER" "===")
 
 # Trellis BMA with the default parameters actually performs better than the trained parameters.

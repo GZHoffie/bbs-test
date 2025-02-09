@@ -87,7 +87,7 @@ dataset_dir = "../datasets/"
 ground_truth_file_list = [pathlib.Path(dataset_dir) / "our_nanopore_refs_subsampled.txt",
                           pathlib.Path(dataset_dir) / "Centers_removed_empty_cluster.txt",
                           pathlib.Path(dataset_dir) / "oligo0refs.txt"]
-output_file_dir = "../results/"
+output_file_dir = "../results/experiment1/"
 
 tool_names = ["MUSCLE", "Trellis BMA", "ITR", "BBS"]
 tool_filename_identifier = ["muscle_output.txt", "trellis_bma_output.txt", "itr_output.txt", "bbs_output.txt"]
@@ -154,5 +154,5 @@ handles, labels = axs[0].get_legend_handles_labels()
 print(handles, labels)
 fig.legend(handles, labels, loc='center right', title='Tool')
 
-plt.savefig("../results/error_rates.pdf")
+plt.savefig("../results/experiment1/error_rates.pdf")
 plt.show()
