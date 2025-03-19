@@ -37,7 +37,8 @@ def convert_ITR_input(cluster_file, center_file, output_file, separator):
         # Write the clusters and centers to the output file
         with open(output_file, "w") as f:
             for center, cluster in zip(centers, clusters):
-                f.write(center + "\n")
+                f.write("A" * len(center) + "\n")
+                #f.write("\n")
                 f.write("*****************************\n")
                 for element in cluster:
                     f.write(element + "\n")
@@ -48,11 +49,11 @@ def convert_ITR_input(cluster_file, center_file, output_file, separator):
 
 
 
-def convert_ITR_output(output_dir):
+def convert_ITR_output(output_dir, id="itr"):
     # Convert the ITR output to the format of the other tools
     # the output_dir should contain the output-results-success.txt and output-results-fail.txt files
     
-    adjusted_output_file = pathlib.Path(output_dir) / "itr_output.txt"
+    adjusted_output_file = pathlib.Path(output_dir) / f"{id}_output.txt"
 
     current_cluster_id = 0
     current_output = ""
@@ -91,7 +92,9 @@ def convert_ITR_output(output_dir):
 
 
 
-def benchmark_all(center_file, cluster_file, read_length, seperator, output_dir, subs_rate = 0.03, del_rate = 0.02, ins_rate = 0.02):
+def benchmark_all(center_file, cluster_file, read_length, seperator, output_dir, subs_rate = 0.03, del_rate = 0.02, ins_rate = 0.02,
+                  run_bbs=True, run_muscle=True, run_trellis_bma=True, run_itr=True, run_cpl=True):
+    # Run all tools and save the output to the output_dir
     subprocess.run(["mkdir", "-p", output_dir])
 
     # also create a log directory under output_dir, use pathlib.Path
@@ -99,65 +102,96 @@ def benchmark_all(center_file, cluster_file, read_length, seperator, output_dir,
     subprocess.run(["mkdir", "-p", log_dir])
 
     # Run BBS
-    bbs_output_file = pathlib.Path(output_dir) / "bbs_output.txt"
-    bbs_time_report_file = pathlib.Path(log_dir) / "bbs_time_report.txt"
-    #print("BBS output file: ", bbs_output_file)
+    if run_bbs:
+        bbs_output_file = pathlib.Path(output_dir) / "bbs_output.txt"
+        bbs_time_report_file = pathlib.Path(log_dir) / "bbs_time_report.txt"
+        #print("BBS output file: ", bbs_output_file)
 
-    with open(bbs_output_file, "w") as f:
-        subprocess.run(["/usr/bin/time", "-o", str(bbs_time_report_file), "-v", 
-                        "./bbs", "-i", cluster_file, 
-                                 "-l", str(read_length),
-                                 "-s", seperator], stdout=f)
+        with open(bbs_output_file, "w") as f:
+            subprocess.run(["/usr/bin/time", "-o", str(bbs_time_report_file), "-v", 
+                            "./bbs", "-i", cluster_file, 
+                                    "-l", str(read_length),
+                                    "-s", seperator], stdout=f)
 
 
     # Run Muscle
-    muscle_output_file = pathlib.Path(output_dir) / "muscle_output.txt"
-    muscle_time_report_file = pathlib.Path(log_dir) / "muscle_time_report.txt"
-    #print("Muscle output file: ", muscle_output_file)   
+    if run_muscle:
+        muscle_output_file = pathlib.Path(output_dir) / "muscle_output.txt"
+        muscle_time_report_file = pathlib.Path(log_dir) / "muscle_time_report.txt"
+        #print("Muscle output file: ", muscle_output_file)   
 
-    subprocess.run(["/usr/bin/time", "-o", str(muscle_time_report_file), "-v", 
-                    "python", "./run_muscle.py", "-i", cluster_file,
-                                                 "-c", center_file, 
-                                                 "-o", muscle_output_file, 
-                                                 "-s", seperator])
+        subprocess.run(["/usr/bin/time", "-o", str(muscle_time_report_file), "-v", 
+                        "python", "./run_muscle.py", "-i", cluster_file,
+                                                    "-c", center_file, 
+                                                    "-o", muscle_output_file, 
+                                                    "-s", seperator])
 
-    # Remove the temporary files
-    subprocess.run(["rm", "clm.fasta"])
-    subprocess.run(["rm", "clmout.fasta"])
+        # Remove the temporary files
+        subprocess.run(["rm", "clm.fasta"])
+        subprocess.run(["rm", "clmout.fasta"])
 
 
     # Run Trellis BMA
-    trellis_bma_file = pathlib.Path(output_dir) / "trellis_bma_output.txt"
-    trellis_bma_time_report_file = pathlib.Path(log_dir) / "trellis_bma_time_report.txt"
+    if run_trellis_bma:
+        trellis_bma_file = pathlib.Path(output_dir) / "trellis_bma_output.txt"
+        trellis_bma_time_report_file = pathlib.Path(log_dir) / "trellis_bma_time_report.txt"
 
 
-    subprocess.run(["/usr/bin/time", "-o", str(trellis_bma_time_report_file), "-v", 
-                    "python", "./run_trellis_bma.py", "-i", cluster_file, 
-                                                      "-c", center_file, 
-                                                      "-l", str(read_length), 
-                                                      "-o", trellis_bma_file, 
-                                                      "-s", seperator, 
-                                                      "-b", str(subs_rate), 
-                                                      "-d", str(del_rate), 
-                                                      "-n", str(ins_rate)], stderr=subprocess.DEVNULL)
+        subprocess.run(["/usr/bin/time", "-o", str(trellis_bma_time_report_file), "-v", 
+                        "python", "./run_trellis_bma.py", "-i", cluster_file, 
+                                                        "-c", center_file, 
+                                                        "-l", str(read_length), 
+                                                        "-o", trellis_bma_file, 
+                                                        "-s", seperator, 
+                                                        "-b", str(subs_rate), 
+                                                        "-d", str(del_rate), 
+                                                        "-n", str(ins_rate)], stderr=subprocess.DEVNULL)
 
     # Run ITR
     # Convert the input file to the format of ITR input
-    itr_input_file = pathlib.Path(output_dir) / "itr_input.txt"
-    itr_output_file = pathlib.Path(output_dir) /  "itr_direct_output.txt"
-    itr_time_report_file = pathlib.Path(log_dir) / "itr_time_report.txt"
-    convert_ITR_input(cluster_file, center_file, itr_input_file, seperator)
+    if run_itr:
+        itr_input_file = pathlib.Path(output_dir) / "itr_input.txt"
+        itr_output_file = pathlib.Path(output_dir) /  "itr_direct_output.txt"
+        itr_time_report_file = pathlib.Path(log_dir) / "itr_time_report.txt"
+        convert_ITR_input(cluster_file, center_file, itr_input_file, seperator)
 
-    
-    subprocess.run(["/usr/bin/time", "-o", str(itr_time_report_file), "-v",
-                    "python", "./run_ITR.py", "-i", itr_input_file,
-                                              "-d", output_dir, 
-                                              "-o", itr_output_file])
-    
-    # Convert the ITR output to the format of the other tools
-    convert_ITR_output(output_dir)
+        
+        subprocess.run(["/usr/bin/time", "-o", str(itr_time_report_file), "-v",
+                        "python", "./run_ITR.py", "-i", itr_input_file,
+                                                "-d", output_dir, 
+                                                "-o", itr_output_file])
+        
+        # Convert the ITR output to the format of the other tools
+        convert_ITR_output(output_dir, id="itr")
 
-    subprocess.run(["rm", itr_input_file])
+        # Remove the output files generated by ITR
+        subprocess.run(["rm", pathlib.Path(output_dir) / "output-results-success.txt"])
+        subprocess.run(["rm", pathlib.Path(output_dir) / "output-results-fail.txt"])
+
+        # Remove the temporary files
+        subprocess.run(["rm", itr_input_file])
+
+
+    # Run CPL
+    if run_cpl:
+        cpl_input_file = pathlib.Path(output_dir) / "cpl_input.txt"
+        cpl_output_file = pathlib.Path(output_dir) / "cpl_output.txt"
+        cpl_time_report_file = pathlib.Path(log_dir) / "cpl_time_report.txt"
+        convert_ITR_input(cluster_file, center_file, cpl_input_file, seperator)
+
+        subprocess.run(["/usr/bin/time", "-o", str(cpl_time_report_file), "-v",
+                        "python", "./run_CPL.py", "-i", cpl_input_file,
+                                                "-d", output_dir, 
+                                                "-o", cpl_output_file])
+        
+        convert_ITR_output(output_dir, id="cpl")
+
+        # Remove the output files generated by CPL
+        subprocess.run(["rm", pathlib.Path(output_dir) / "output-results-success.txt"])
+        subprocess.run(["rm", pathlib.Path(output_dir) / "output-results-fail.txt"])
+    
+        # Remove the temporary files
+        #subprocess.run(["rm", cpl_input_file])
 
 
 if __name__ == "__main__":
@@ -173,7 +207,15 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--deletion-rate", required=True, help="Deletion rate.")
     parser.add_argument("-n", "--insertion-rate", required=True, help="Insertion rate.")
 
+    # Add flags to run specific tools
+    parser.add_argument("--bbs", action="store_true", help="Run BBS")
+    parser.add_argument("--muscle", action="store_true", help="Run Muscle")
+    parser.add_argument("--trellis-bma", action="store_true", help="Run Trellis BMA")
+    parser.add_argument("--itr", action="store_true", help="Run ITR")
+    parser.add_argument("--cpl", action="store_true", help="Run CPL")
+
     args = parser.parse_args()
 
-    benchmark_all(args.center, args.input, int(args.read_length), args.separator, args.output, float(args.substitution_rate), float(args.deletion_rate), float(args.insertion_rate))
+    benchmark_all(args.center, args.input, int(args.read_length), args.separator, args.output, float(args.substitution_rate), float(args.deletion_rate), float(args.insertion_rate),
+                  run_bbs=args.bbs, run_muscle=args.muscle, run_trellis_bma=args.trellis_bma, run_itr=args.itr, run_cpl=args.cpl)
 

@@ -58,7 +58,7 @@ def analyze(clusters, centers):
 
 if __name__ == "__main__":
     #clusters, centers = input_file("./Clusters_removed_empty_cluster.txt", "./Centers_removed_empty_cluster.txt")
-    clusters, centers = input_file("./oligo0_UnderlyingClusters.txt", "./oligo0refs.txt", "CLUSTER", skip_first_line=True)
+    clusters, centers = input_file("./BinnedNanoporeTwoFlowcells_clusters_subsampled.txt", "./BinnedNanoporeTwoFlowcells_centers_subsampled.txt", "===", skip_first_line=True)
     #clusters, centers = input_file("/mnt/c/Users/zhenh/trace_recon/oligo0_UnderlyingClusters.txt", "/mnt/c/Users/zhenh/trace_recon/oligo0refs.txt", "CLUSTER", skip_first_line=True)
 
     analyze(clusters, centers)

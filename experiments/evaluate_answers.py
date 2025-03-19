@@ -49,10 +49,10 @@ def benchmark(answer_file_name, ground_truth_file_name):
     for i in range(len(reconstructed_strands)):
         if answer[i] == reconstructed_strands[i]:
             correct+= 1
-        #else:
-            #print(i)
-            #print('Actual:\t',answer[i])
-            #print('Recon: \t', reconstructed_strands[i])
+        else:
+            print(i)
+            print('Actual:\t',answer[i])
+            print('Recon: \t', reconstructed_strands[i])
 
     index_wrong_counts = [0]*len(answer[0])
     for i in range(len(reconstructed_strands)):

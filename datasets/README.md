@@ -10,9 +10,15 @@ In our benchmark, we test three separate nanopore read clusters: one from our in
    git clone https://github.com/microsoft/clustered-nanopore-reads-dataset
    ```
 
-2. The in-house dataset and the dataset by Chandak et al. use the perfect clustering: all sequenced reads are mapped to the closest sequence in the ground truth. 
+1. DNAformer dataset by Sabary et al. is avalable at [Zenodo](https://zenodo.org/records/13896773).
 
-All datasets are avilable in the [Google drive](https://drive.google.com/drive/folders/1NXzimFt2tFtpw2XfqyWX6dXYJml_pPyw?usp=sharing). In the shared folder, `[Clusters/Centers]_removed_empty_cluster` correspond to the Microsoft CNR dataset with the empty clusters removed, `our_nanopore_*.txt` correspond to the in-house dataset, and `oligo0*.txt` correspond to the Chandak et al. dataset.
+   ```bash
+   wget https://zenodo.org/records/13896773/files/BinnedNanoporeTwoFlowcells.txt
+   ```
+
+1. The dataset by Chandak et al. use the perfect clustering: all sequenced reads are mapped to the closest sequence in the ground truth. 
+
+All datasets are avilable in the [Google drive](https://drive.google.com/drive/folders/1NXzimFt2tFtpw2XfqyWX6dXYJml_pPyw?usp=sharing). In the shared folder, `[Clusters/Centers]_removed_empty_cluster` correspond to the Microsoft CNR dataset with the empty clusters removed, `BinnedNanoporeTwoFlowcells_*.txt` correspond to the Bar-Lev dataset, and `oligo0*.txt` correspond to the Chandak et al. dataset.
 
 ## Dataset Processing
 
@@ -22,7 +28,7 @@ All datasets are avilable in the [Google drive](https://drive.google.com/drive/f
 
  |Dataset Name|Insertion Rate|Deletion Rate|Substitution Rate|Error Rate|Number of Clusters|Average Coverage|
  |------------|--------------|-------------|-----------------|----------|------------------|------------|
- In-house|5.26%|2.17%|4.68%|12.11%|1496|24.15|
+ Bar-Lev et al.|1.17%|1.52%|1.65%|4.34%|10000|21.37|
  Microsoft CNR|2.14%|1.86%|1.77%|5.77%|9984|27.01|
  Chandak et al.|4.56%|5.09%|3.91%|13.56%|1466|114.29|
 

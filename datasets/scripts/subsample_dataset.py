@@ -73,6 +73,16 @@ if __name__ == "__main__":
 
     #sample(clusters, centers, "/mnt/c/Users/zhenh/trace_recon/our_nanopore_UnderlyingClusters_subsampled.txt", "/mnt/c/Users/zhenh/trace_recon/our_nanopore_refs_subsampled.txt", num_samples, num_sample_per_cluster=25, separator = "===")
 
+    # Subsample the Sabary et al dataset
+    """
+    num_samples = 10000
+    clusters, centers = input_file("datasets/BinnedNanoporeTwoFlowcells_clusters.txt",
+                                      "datasets/BinnedNanoporeTwoFlowcells_centers.txt", skip_first_line=False, seperator="===")
+    sample(clusters, centers, "datasets/BinnedNanoporeTwoFlowcells_clusters_subsampled.txt", "datasets/BinnedNanoporeTwoFlowcells_centers_subsampled.txt", num_samples, separator = "===")
+    """
+    
+
+    # Subsample the Microsoft CNR dataset
     num_samples = 500
 
     clusters, centers = input_file("datasets/Clusters_removed_empty_cluster.txt",
@@ -90,7 +100,7 @@ if __name__ == "__main__":
         sample(clusters, centers, f"datasets/Clusters_subsampled_{num_reads}.txt", f"datasets/Centers_subsampled_{num_reads}.txt", num_samples, num_sample_per_cluster=num_reads, separator = "===")
         clusters, centers = input_file(f"datasets/Clusters_subsampled_{num_reads}.txt",
                                        f"datasets/Centers_subsampled_{num_reads}.txt", skip_first_line=True)
+    
 
-        
 
     

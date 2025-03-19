@@ -85,6 +85,29 @@ python run_ITR.py [-h] -i INPUT_FILE -d OUTPUT_DIRECTORY -o OUTPUT_FILE
 
 Moreover, the output of the ITR algorithm is split into `OUTPUT_DIRECTORY/output-results-fail.txt` and `OUTPUT_DIRECTORY/output-results-success.txt`. We write a script in `run_all.py` to parse the output files so that the output format is consistent with the other tools.
 
+
+## CPL algorithm
+
+Download and setup the CPL algorithm.
+
+```bash
+# under tools/ directory
+git clone https://github.com/itaiorr/Deep-DNA-based-storage.git
+cd Deep-DNA-based-storage/CPL
+
+# In the file Graph.cpp, add a line `#include <climits>`.
+# remove the original compilation files 
+rm *.o main
+make
+chmod +x ./main
+```
+
+## DNAFormer + CPL
+
+Use the same procedure 
+
+
+
 ## BBS algorithm
 
 Download the BBS executable from GitHub releases.
@@ -100,6 +123,10 @@ BBS can be run using the following.
 ```bash
 ./bbs [-h] -i INPUT -s SEPARATOR -l READ_LENGTH > OUTPUT_FILE
 ```
+
+## Collective script to run all tools
+
+We create a script to run all tools.
 
 # References
 
