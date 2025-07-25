@@ -8,3 +8,7 @@ bbs_multiple_output
 simulated_data
 *.txt
 Deep-DNA-based-storage
+*.png
+msa.py
+evaluate_clustering.py
+presentation_figures

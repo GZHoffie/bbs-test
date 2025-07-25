@@ -102,11 +102,6 @@ make
 chmod +x ./main
 ```
 
-## DNAFormer + CPL
-
-Use the same procedure 
-
-
 
 ## BBS algorithm
 
